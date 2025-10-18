@@ -3,7 +3,7 @@ This project analyses the distribution of personality types among employees in A
 .
 By: Fozan Ahmed
 .
-![personality_distribution](https://github.com/user-attachments/assets/602874f2-9f98-41f2-858f-2646777f5993)
+<img width="1200" height="800" alt="participants_personality_distribution" src="https://github.com/user-attachments/assets/bd2e317e-5bb1-47a7-883f-28cfc148bac6" />
 
 Steps Involved:
 1. Generating Sample Data:
@@ -119,3 +119,4 @@ Data Analyst and Python Enthusiast
 - Add more attributes (e.g., tenure, department, interests) to enable richer analysis.
 - Implement cross-tabs in the notebook and compare cohorts (e.g., teams or time periods).
 - Consider lightweight dashboards (e.g., Streamlit) for interactive exploration.
+
