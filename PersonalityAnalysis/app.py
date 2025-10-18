@@ -1,61 +1,72 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import random
 
-# Step 1: Generate Sample Data
-roles = ["Programmer", "Engineer", "Worker", "Manager", "Designer", "Analyst", "Technician", "HR", "Consultant"]
-personalities = ["INFP", "ENFP", "ESFJ", "ISTP", "INFJ", "ENTP", "ENTJ", "ISFP", "INTP", "ESTP", "ESTJ", "ISFJ", "ISTJ", "ENFJ", "INTJ", "ESFP"]
+# Load participants dataset (volunteering management MBTI data)
+DATA_PATH = os.path.join(os.path.dirname(__file__), "participants_mbti.csv")
 
-data = {
-    "Employee ID": list(range(1, 351)),
-    "Name": [f"Employee_{i}" for i in range(1, 351)],
-    "Role": [random.choice(roles) for _ in range(350)],
-    "Personality Type": [random.choice(personalities) for _ in range(350)]
-}
+if not os.path.exists(DATA_PATH):
+    raise FileNotFoundError(f"Dataset not found at {DATA_PATH}. Please ensure participants_mbti.csv exists.")
 
-# Convert to DataFrame
-df = pd.DataFrame(data)
+# Read CSV
+df = pd.read_csv(DATA_PATH)
+# Add a simple Participant ID column
+df.insert(0, "Participant ID", range(1, len(df) + 1))
+# Normalize MBTI codes
+df["MBTI"] = df["MBTI"].str.upper().str.strip()
 
-# Step 2: Analyze Personality Distribution
-personality_counts = df["Personality Type"].value_counts()
-personality_percentages = (personality_counts / len(df)) * 100
+# MBTI distribution
+mbti_order = [
+    "INFP", "ENFP", "ESFJ", "ISTP", "INFJ", "ENTP", "ENTJ", "ISFP",
+    "INTP", "ESTP", "ESTJ", "ISFJ", "ISTJ", "ENFJ", "INTJ", "ESFP"
+]
+counts = df["MBTI"].value_counts()
+percentages = (counts / len(df)) * 100
+summary_df = (
+    pd.DataFrame({"MBTI": counts.index, "Count": counts.values, "Percentage": percentages.values})
+    .set_index("MBTI")
+    .reindex(mbti_order)
+    .dropna()
+    .reset_index()
+)
 
-summary_df = pd.DataFrame({
-    "Personality Type": personality_counts.index,
-    "Count": personality_counts.values,
-    "Percentage": personality_percentages.values
-})
-
-# Step 3: Visualize the Distribution
+# Visualize distribution
 sns.set(style="whitegrid")
 plt.figure(figsize=(12, 8))
-sns.barplot(x="Personality Type", y="Percentage", data=summary_df, palette="viridis")
-plt.title("Personality Distribution in AequorTech CTRL by Fozan Ahmed", fontsize=16)
-plt.xlabel("Personality Type", fontsize=12)
+sns.barplot(x="MBTI", y="Percentage", data=summary_df, palette="viridis")
+plt.title("Personality Distribution (Volunteering Participants) in AequorTech CTRL", fontsize=16)
+plt.xlabel("MBTI Type", fontsize=12)
 plt.ylabel("Percentage (%)", fontsize=12)
 plt.xticks(rotation=45)
 plt.tight_layout()
-plt.savefig("personality_distribution.png")
-plt.show()
 
-# Step 4: Add Lookup Functions
-def find_personality_by_name(name):
-    employee = df[df["Name"].str.lower() == name.lower()]
-    if not employee.empty:
-        personality = employee.iloc[0]["Personality Type"]
-        print(f"{name}'s Personality Type: {personality}")
+out_path = os.path.join(os.path.dirname(__file__), "participants_personality_distribution.png")
+plt.savefig(out_path)
+# Avoid interactive show in headless environments
+# plt.show()
+
+print(f"Saved distribution plot to: {out_path}")
+
+# Lookup utilities
+
+def find_personality_by_name(name: str):
+    person = df[df["Name"].str.lower() == name.lower()]
+    if not person.empty:
+        mbti = person.iloc[0]["MBTI"]
+        print(f"{name}'s MBTI: {mbti}")
     else:
-        print(f"Employee {name} not found.")
+        print(f"Participant {name} not found.")
 
-def find_personality_by_id(emp_id):
-    employee = df[df["Employee ID"] == emp_id]
-    if not employee.empty:
-        personality = employee.iloc[0]["Personality Type"]
-        print(f"Employee ID {emp_id}'s Personality Type: {personality}")
-    else:
-        print(f"Employee ID {emp_id} not found.")
 
-# Example Usage
-find_personality_by_name("Employee_340")
-find_personality_by_id(230)
+def list_participants_by_mbti(mbti: str):
+    mbti_clean = mbti.upper().strip()
+    people = df[df["MBTI"] == mbti_clean][["Name", "Gender", "City", "Country", "Occupation"]]
+    print(f"Participants with MBTI {mbti_clean} ({len(people)}):")
+    print(people.to_string(index=False))
+
+
+if __name__ == "__main__":
+    # Example usage for quick verification
+    find_personality_by_name("Fozan Ahmed")
+    list_participants_by_mbti("INFP")
