@@ -67,3 +67,19 @@ This project analyzes MBTI personality types for volunteering participants at Ae
 - MBTI codes are normalized to uppercase; Age is parsed as numeric where present.
 - Occupation grouping uses simple keywords (e.g., engineering/tech, design/creative, student/trainee). You can refine categories as data grows.
 - If `nbconvert` is missing: `python -m pip install nbconvert`. If `jupyter` is missing: `python -m pip install notebook`.
+
+## Visual Gallery
+- Script output — Distribution:
+  - ![MBTI Distribution — Script](PersonalityAnalysis/participants_personality_distribution.png)
+- Advanced notebook — Gender:
+  - ![MBTI × Gender — Counts](PersonalityAnalysis/advanced_mbti_gender_heatmap.png)
+  - ![MBTI × Gender — Column %](PersonalityAnalysis/advanced_mbti_gender_colpct_heatmap.png)
+  - ![MBTI × Gender — Row %](PersonalityAnalysis/advanced_mbti_gender_rowpct_heatmap.png)
+- Advanced notebook — Occupation (raw):
+  - ![MBTI × Occupation — Counts](PersonalityAnalysis/advanced_mbti_occupation_heatmap.png)
+- Advanced notebook — Occupation Group:
+  - ![MBTI × Occupation Group — Counts](PersonalityAnalysis/advanced_mbti_occupation_group_heatmap.png)
+  - ![MBTI × Occupation Group — Column %](PersonalityAnalysis/advanced_mbti_occupation_group_colpct_heatmap.png)
+  - ![MBTI × Occupation Group — Row %](PersonalityAnalysis/advanced_mbti_occupation_group_rowpct_heatmap.png)
+- Advanced notebook — Age:
+  - ![Age by MBTI (Boxplot)](PersonalityAnalysis/advanced_age_by_mbti.png)
